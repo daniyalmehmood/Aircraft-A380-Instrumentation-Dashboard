@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aircraft Instrumentation Verification System - A380 Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div id="alert-overlay" class="alert-overlay hidden"></div>
+
+<div class="dashboard-container" id="dashboard">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <i class="fas fa-plane"></i>
+            <h1>A380 Instrumentation Dashboard</h1>
+        </div>
+        <div class="header-center">
+            <div class="flight-info">
+                <span id="callsign">---</span>
+                <span class="separator">|</span>
+                <span id="flight-phase">PREFLIGHT</span>
+                <span class="separator">|</span>
+                <span id="simulation-status" class="status-badge status-inactive">INACTIVE</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="master-warning" id="master-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>MASTER WARNING</span>
+            </div>
+            <div class="master-caution" id="master-caution">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>MASTER CAUTION</span>
+            </div>
+            <div class="datetime" id="datetime"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Left Panel - Primary Flight Display -->
+        <section class="panel pfd-panel">
+            <div class="panel-header">
+                <h2><i class="fas fa-tachometer-alt"></i> Primary Flight Display</h2>
+            </div>
+            <div class="panel-content">
+                <!-- PFD Attitude Indicator (Required by JS) -->
+                <div class="pfd-attitude-indicator" id="pfd-attitude-indicator" style="width: 100%; height: 180px; background-color: #87CEEB; border: 2px solid var(--border-color); border-radius: 4px; margin-bottom: 15px; position: relative; overflow: hidden;">
+                    <div class="pfd-horizon" id="pfd-horizon" style="position: absolute; top: 50%; left: -50%; width: 200%; height: 2px; background-color: white; transform-origin: center; transition: transform 0.1s linear;"></div>
+                    <div class="pfd-fixed-plane" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 20px; display: flex; align-items: center;">
+                        <div class="wing left" style="height: 2px; width: 40px; background: #ffdd00;"></div>
+                        <div class="dot" style="height: 6px; width: 6px; background: #ffdd00; border-radius: 50%; margin: 0 4px;"></div>
+                        <div class="wing right" style="height: 2px; width: 40px; background: #ffdd00;"></div>
+                    </div>
+                </div>
+                <div class="instrument-grid">
+                    <div class="instrument" id="airspeed-indicator">
+                        <div class="instrument-label">AIRSPEED</div>
+                        <div class="instrument-value" id="airspeed-value">0</div>
+                        <div class="instrument-unit">KTS</div>
+                    </div>
+                    <div class="instrument" id="altitude-indicator">
+                        <div class="instrument-label">ALTITUDE</div>
+                        <div class="instrument-value" id="altitude-value">0</div>
+                        <div class="instrument-unit">FT</div>
+                    </div>
+                    <div class="instrument" id="vsi-indicator">
+                        <div class="instrument-label">VERTICAL SPEED</div>
+                        <div class="instrument-value" id="vsi-value">0</div>
+                        <div class="instrument-unit">FPM</div>
+                    </div>
+                    <div class="instrument" id="heading-indicator">
+                        <div class="instrument-label">HEADING</div>
+                        <div class="instrument-value" id="heading-value">0</div>
+                        <div class="instrument-unit">°</div>
+                    </div>
+                    <div class="instrument" id="mach-indicator">
+                        <div class="instrument-label">MACH</div>
+                        <div class="instrument-value" id="mach-value">0.00</div>
+                        <div class="instrument-unit">M</div>
+                    </div>
+                    <div class="instrument" id="gs-indicator">
+                        <div class="instrument-label">GROUND SPEED</div>
+                        <div class="instrument-value" id="gs-value">0</div>
+                        <div class="instrument-unit">KTS</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Center Panel - Engine Display & Controls -->
+        <section class="panel engine-panel">
+            <div class="panel-header">
+                <h2><i class="fas fa-cogs"></i> Engine Parameters & Controls</h2>
+            </div>
+            <div class="panel-content">
+                <div class="engine-grid">
+                    <!-- Engines 1-4 -->
+                    <div class="engine" id="engine-1"><div class="engine-title">ENG 1</div><div class="engine-param"><span class="param-label">N1</span><div class="gauge-container"><div class="gauge-bar" id="eng1-n1-bar"></div></div><span class="param-value" id="eng1-n1">0%</span></div><div class="engine-param"><span class="param-label">EGT</span><div class="gauge-container"><div class="gauge-bar egt-bar" id="eng1-egt-bar"></div></div><span class="param-value" id="eng1-egt">0°C</span></div><div class="engine-param"><span class="param-label">FF</span><span class="param-value" id="eng1-ff">0 kg/h</span></div></div>
+                    <div class="engine" id="engine-2"><div class="engine-title">ENG 2</div><div class="engine-param"><span class="param-label">N1</span><div class="gauge-container"><div class="gauge-bar" id="eng2-n1-bar"></div></div><span class="param-value" id="eng2-n1">0%</span></div><div class="engine-param"><span class="param-label">EGT</span><div class="gauge-container"><div class="gauge-bar egt-bar" id="eng2-egt-bar"></div></div><span class="param-value" id="eng2-egt">0°C</span></div><div class="engine-param"><span class="param-label">FF</span><span class="param-value" id="eng2-ff">0 kg/h</span></div></div>
+                    <div class="engine" id="engine-3"><div class="engine-title">ENG 3</div><div class="engine-param"><span class="param-label">N1</span><div class="gauge-container"><div class="gauge-bar" id="eng3-n1-bar"></div></div><span class="param-value" id="eng3-n1">0%</span></div><div class="engine-param"><span class="param-label">EGT</span><div class="gauge-container"><div class="gauge-bar egt-bar" id="eng3-egt-bar"></div></div><span class="param-value" id="eng3-egt">0°C</span></div><div class="engine-param"><span class="param-label">FF</span><span class="param-value" id="eng3-ff">0 kg/h</span></div></div>
+                    <div class="engine" id="engine-4"><div class="engine-title">ENG 4</div><div class="engine-param"><span class="param-label">N1</span><div class="gauge-container"><div class="gauge-bar" id="eng4-n1-bar"></div></div><span class="param-value" id="eng4-n1">0%</span></div><div class="engine-param"><span class="param-label">EGT</span><div class="gauge-container"><div class="gauge-bar egt-bar" id="eng4-egt-bar"></div></div><span class="param-value" id="eng4-egt">0°C</span></div><div class="engine-param"><span class="param-label">FF</span><span class="param-value" id="eng4-ff">0 kg/h</span></div></div>
+                </div>
+                <div class="fuel-display">
+                    <div class="fuel-header"><i class="fas fa-gas-pump"></i> FUEL</div>
+                    <div class="fuel-gauge"><div class="fuel-bar" id="fuel-bar"></div></div>
+                    <div class="fuel-info"><span id="fuel-qty">0 kg</span><span id="fuel-percent">0%</span></div>
+                </div>
+                <div class="quick-controls">
+                    <div class="quick-control"><label>THROTTLE</label><div class="heading-controls" style="flex-grow:1;"><input type="range" id="throttle-slider" min="0" max="100" value="0"><span id="throttle-value">0%</span></div></div>
+                    <div class="quick-control"><label>HEADING</label><div class="heading-controls"><button class="hdg-btn" id="hdg-minus-10-btn">◀◀</button><button class="hdg-btn" id="hdg-minus-1-btn">◀</button><span id="hdg-select">270°</span><button class="hdg-btn" id="hdg-plus-1-btn">▶</button><button class="hdg-btn" id="hdg-plus-10-btn">▶▶</button></div></div>
+                    <div class="quick-control"><label>FLAPS</label><select id="flaps-select"><option value="0">UP</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">FULL</option></select></div>
+                    <div class="quick-control"><label>GEAR</label><button class="gear-btn" id="gear-btn"><i class="fas fa-circle"></i> DOWN</button></div>
+                    <div class="quick-control"><label>PITCH</label><div class="button-group"><button id="pitch-up-btn"><i class="fas fa-arrow-up"></i></button><span id="pitch-value">0.0°</span><button id="pitch-down-btn"><i class="fas fa-arrow-down"></i></button></div></div>
+                    <div class="quick-control"><label>A/P V/S</label><div class="button-group"><button id="vs-up-btn"><i class="fas fa-plus"></i></button><span id="ap-vs-value">0</span><button id="vs-down-btn"><i class="fas fa-minus"></i></button></div></div>
+                </div>
+                <div class="quick-controls" style="margin-top: 10px;">
+                    <div class="quick-control"><label>SPD BRK</label><button class="spoiler-btn" id="spoiler-btn">RET</button></div>
+                    <div class="quick-control"><label>PRK BRK</label><button class="park-brake-btn active" id="park-brake-btn">SET</button></div>
+                    <div class="quick-control"><label>A/P</label><button class="ap-btn" id="ap-btn">OFF</button></div>
+                    <div class="quick-control"><label>A/THR</label><button class="athr-btn" id="athr-btn">OFF</button></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Panel - Weather & Navigation -->
+        <section class="panel weather-panel">
+            <div class="panel-header">
+                <h2><i class="fas fa-cloud-sun"></i> Weather & Navigation</h2>
+            </div>
+            <div class="panel-content">
+                <div class="weather-grid">
+                    <div class="weather-item" id="wind-display"><i class="fas fa-wind"></i><div class="weather-label">WIND</div><div class="weather-value" id="wind-value">---°/-- KTS</div><div class="weather-detail"><span>Headwind: <span id="headwind">--</span></span> <span>Crosswind: <span id="crosswind">--</span></span></div></div>
+                    <div class="weather-item" id="visibility-display"><i class="fas fa-eye"></i><div class="weather-label">VISIBILITY</div><div class="weather-value" id="visibility-value">-- SM</div></div>
+                    <div class="weather-item" id="temp-display"><i class="fas fa-thermometer-half"></i><div class="weather-label">OAT</div><div class="weather-value" id="oat-value">--°C</div></div>
+                    <div class="weather-item" id="pressure-display"><i class="fas fa-tachometer-alt"></i><div class="weather-label">QNH</div><div class="weather-value" id="qnh-value">---- hPa</div></div>
+                </div>
+                <div class="weather-alerts" id="weather-alerts"><div class="alert-header"><i class="fas fa-exclamation-triangle"></i> WEATHER ALERTS</div><div class="alert-list" id="weather-alert-list"><div class="no-alerts">No active weather alerts</div></div></div>
+                <div class="turbulence-display"><div class="turbulence-label">TURBULENCE</div><div class="turbulence-scale"><div class="turbulence-level" data-level="none">NONE</div><div class="turbulence-level" data-level="light">LIGHT</div><div class="turbulence-level" data-level="moderate">MOD</div><div class="turbulence-level" data-level="severe">SEV</div><div class="turbulence-level" data-level="extreme">EXT</div></div></div>
+                <!-- Navigation Display (Required by JS) -->
+                <div class="nav-display-container" style="margin-top: 15px; border: 1px solid var(--border-color); border-radius: 4px;">
+                    <div class="nd-header" style="display: flex; justify-content: space-between; align-items: center; padding: 5px 10px; background: rgba(0,0,0,0.2);">
+                        <h3>NAV Display</h3>
+                        <div class="nd-mode-controls">
+                            <button class="nd-mode-btn" id="nd-mode-tcas" style="background: var(--accent-blue); color: #fff;">TCAS</button>
+                            <button class="nd-mode-btn" id="nd-mode-wxr">WXR</button>
+                            <button class="nd-mode-btn" id="nd-mode-terr">TERR</button>
+                        </div>
+                    </div>
+                    <canvas id="nav-display-canvas" width="300" height="200" style="background: #000; width: 100%; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px;"></canvas>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Section -->
+    <section class="bottom-section">
+        <div class="systems-panel">
+            <div class="panel-header"><h2><i class="fas fa-check-circle"></i> System Status</h2></div>
+            <div class="systems-grid">
+                <div class="system-item ok" id="sys-hydraulic"><div class="system-icon"><i class="fas fa-tint"></i></div><div class="system-name">HYDRAULIC</div><div class="system-status">OK</div></div>
+                <div class="system-item ok" id="sys-electrical"><div class="system-icon"><i class="fas fa-bolt"></i></div><div class="system-name">ELECTRICAL</div><div class="system-status">OK</div></div>
+                <div class="system-item ok" id="sys-pneumatic"><div class="system-icon"><i class="fas fa-fan"></i></div><div class="system-name">PNEUMATIC</div><div class="system-status">OK</div></div>
+                <div class="system-item ok" id="sys-fuel"><div class="system-icon"><i class="fas fa-gas-pump"></i></div><div class="system-name">FUEL</div><div class="system-status">OK</div></div>
+                <div class="system-item" id="sys-apu"><div class="system-icon"><i class="fas fa-power-off"></i></div><div class="system-name">APU</div><div class="system-status">OFF</div></div>
+                <div class="system-item" id="sys-autopilot"><div class="system-icon"><i class="fas fa-robot"></i></div><div class="system-name">A/P</div><div class="system-status">OFF</div></div>
+                <div class="system-item ok" id="sys-gear"><div class="system-icon"><i class="fas fa-circle"></i></div><div class="system-name">GEAR</div><div class="system-status">DOWN</div></div>
+                <div class="system-item ok" id="sys-flaps"><div class="system-icon"><i class="fas fa-bars"></i></div><div class="system-name">FLAPS</div><div class="system-status">UP</div></div>
+            </div>
+        </div>
+        <div class="ecam-panel">
+            <div class="panel-header"><h2><i class="fas fa-list"></i> ECAM Messages</h2></div>
+            <div class="ecam-messages" id="ecam-messages"><div class="ecam-message info"><span class="ecam-time">--:--:--</span><span class="ecam-text">System initialized. Waiting for simulation...</span></div></div>
+        </div>
+        <div class="verification-panel">
+            <div class="panel-header"><h2><i class="fas fa-clipboard-check"></i> Verification Status</h2></div>
+            <div class="verification-content">
+                <div class="verification-summary">
+                    <div class="verification-stat passed"><div class="stat-value" id="verify-passed">0</div><div class="stat-label">PASSED</div></div>
+                    <div class="verification-stat warning"><div class="stat-value" id="verify-warning">0</div><div class="stat-label">WARNING</div></div>
+                    <div class="verification-stat failed"><div class="stat-value" id="verify-failed">0</div><div class="stat-label">FAILED</div></div>
+                </div>
+                <div class="verification-progress">
+                    <div class="progress-bar"><div class="progress-fill" id="verify-progress"></div></div>
+                    <span id="verify-percent">0%</span>
+                </div>
+                <button class="verify-btn" id="verify-btn"><i class="fas fa-play"></i> Run Verification</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Control Bar -->
+    <footer class="control-bar">
+        <div class="control-group">
+            <button class="control-btn" id="btn-new-sim"><i class="fas fa-plus"></i> New Sim</button>
+            <button class="control-btn" id="btn-start" disabled><i class="fas fa-play"></i> Start</button>
+            <button class="control-btn" id="btn-pause" disabled><i class="fas fa-pause"></i> Pause</button>
+            <button class="control-btn" id="btn-stop" disabled><i class="fas fa-stop"></i> Stop</button>
+        </div>
+        <div class="control-group">
+            <select id="flight-phase-select">
+                <option value="PREFLIGHT">Preflight</option><option value="ENGINE_START">Engine Start</option><option value="TAXI">Taxi</option><option value="TAKEOFF">Takeoff</option><option value="CLIMB">Climb</option><option value="CRUISE" selected>Cruise</option><option value="DESCENT">Descent</option><option value="APPROACH">Approach</option><option value="LANDING">Landing</option>
+            </select>
+            <button class="control-btn" id="btn-generate-readings"><i class="fas fa-sync"></i> Readings</button>
+            <button class="control-btn" id="btn-regenerate-weather"><i class="fas fa-cloud"></i> Weather</button>
+        </div>
+        <div class="control-group">
+            <label class="toggle-label"><input type="checkbox" id="random-events-toggle" checked><span class="toggle-text">Events</span></label>
+            <button class="control-btn warning-btn" id="btn-simulate-warning"><i class="fas fa-exclamation-circle"></i> Warn</button>
+            <button class="control-btn danger" id="btn-simulate-failure"><i class="fas fa-exclamation-triangle"></i> Fail</button>
+            <button class="control-btn" id="btn-refuel"><i class="fas fa-gas-pump"></i> Refuel</button>
+            <button class="control-btn" id="btn-clear-alerts"><i class="fas fa-times"></i> Clear</button>
+        </div>
+    </footer>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="alert-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-exclamation-triangle"></i> <span id="modal-title">Alert</span></h3>
+            <button class="modal-close" id="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+        <div class="modal-footer">
+            <button class="btn-acknowledge" id="modal-acknowledge-btn">ACKNOWLEDGE</button>
+        </div>
+    </div>
+</div>
+
+<script src="js/dashboard.js"></script>
+</body>
+</html>
