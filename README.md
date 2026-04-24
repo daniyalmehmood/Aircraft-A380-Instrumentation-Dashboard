@@ -6,7 +6,11 @@ A full-stack **Airbus A380 cockpit simulation and instrumentation verification s
 
 ## 📸 Preview
 
-<img width="1919" height="909" alt="A380 Instrumentation Dashboard" src="https://github.com/user-attachments/assets/2573667d-7e28-4add-832f-8bdb467feade" />
+> **Full cockpit dashboard — Primary Flight Display, Engine Parameters, Weather & Navigation, ECAM, and System Status panels**
+
+<p align="center">
+  <img width="100%" alt="A380 Instrumentation Dashboard — Full Cockpit View" src="https://github.com/user-attachments/assets/2573667d-7e28-4add-832f-8bdb467feade" />
+</p>
 
 ---
 
@@ -399,7 +403,31 @@ Contributions are welcome! To get started:
 
 ## 📄 License
 
-This project is open-source.
+This project is licensed under the **MIT License**.
+
+```
+MIT License
+
+Copyright (c) 2025 Muhammad Daniyal Mehmood
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
 
 ---
 
